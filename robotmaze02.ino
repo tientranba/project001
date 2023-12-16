@@ -10,7 +10,7 @@ long Duration, Distance;// thời gian, khoảng cách phản lại
 long leftDistance = 0, middleDistance = 0, rightDistance = 0;
 float soundSpeed = 0.0343;//tôc độ âm thanh 343 m/s = 0.0343 cm/um
 int Wall = 19;//Khoảng cách vật chắn**
-long minDistance = 1.9;//Khoảng cách nhận biết xe bị cấn
+long minDistance = 1.9;
 
 void setup()
 {
@@ -29,7 +29,7 @@ void setup()
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
   Stop();
-  delay(3000);
+  delay(3500);
 }
 
 long leftMeasurement()//Đo khoảng cách trái
@@ -124,16 +124,16 @@ void Stop()
 
 void checkDistance()
 {
-  delay(100);
-  int tempDistance1 = leftMeasurement();
+  delay(99);
+  int DistanceHT1 = leftMeasurement();
   delay(10);
-  int tempDistance2 = middleMeasurement();
+  int DistanceHT2 = middleMeasurement();
   delay(10);
-  int tempDistance3 = rightMeasurement();
+  int DistanceHT3 = rightMeasurement();
   delay(10);
   while(true)
   {
-    if(abs(tempDistance1 - leftDistance) <= minDistance && abs(tempDistance2 - middleDistance) <= minDistance && abs(tempDistance3 - rightDistance) <= minDistance)
+    if(abs(DistanceHT1 - leftDistance) <= minDistance && abs(DistanceHT2 - middleDistance) <= minDistance && abs(DistanceHT3 - rightDistance) <= minDistance)
     {
       Stop();
       delay(400);
