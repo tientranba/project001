@@ -135,7 +135,7 @@ void checkDistance()
   {
     if(abs(DistanceHT1 - leftDistance) <= minDistance && abs(DistanceHT2 - middleDistance) <= minDistance && abs(DistanceHT3 - rightDistance) <= minDistance)
     {
-      if(leftDistance < rightDistance)
+      if(DistanceHT1 < DistanceHT3)
       {
         Serial.println("Xe không di chuyển!!");
         Stop();
@@ -146,7 +146,7 @@ void checkDistance()
         delay(30);
         break; 
       }
-      else if(leftDistance > rightDistance)
+      else if(DistanceHT1 > DistanceHT3)
       {
         Serial.println("Xe không di chuyển!!");
         Stop();
