@@ -2,15 +2,16 @@ int trig1 = A0, echo1 = A1;// cảm biến trái
 int trig2 = A2, echo2 = A3;// cảm biến giữa
 int trig3 = A4, echo3 = A5;// cảm biến phải
 
-int  ENA = 11, ENB = 3;// chân điều khiển tốc độ
-int  in1 = 10, in2 = 9, in3 = 8, in4 = 7;// chân điều khiển hướng đi
+int in1 = 10, in2 = 9, in3 = 8, in4 = 7;
+int ENA = 11, ENB = 3;
 
-int leftSpeed = 88, rightSpeed = 93;// tốc độ bánh xe**
-long Duration, Distance;// thời gian, khoảng cách phản lại
+long Duration, Distance;
+float soundSpeed = 0.0343;
+int leftSpeed = 90, rightSpeed = 95;
 long leftDistance = 0, middleDistance = 0, rightDistance = 0;
-float soundSpeed = 0.0343;//tôc độ âm thanh 343 m/s = 0.0343 cm/um
-int Wall = 19;//Khoảng cách vật chắn**
-long minDistance = 1.9;
+int Wall = 19;
+float minDistance = 1.9;
+
 
 void setup()
 {
@@ -28,12 +29,13 @@ void setup()
   pinMode(in2, OUTPUT);
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
-  Stop();
-  delay(3500);
+  stop();
+  delay(3800);
+
 }
 
-long leftM()//Đo khoảng cách trái
-{ 
+long leftM()
+{
   digitalWrite(trig1, LOW);
   delayMicroseconds(2);
   digitalWrite(trig1, HIGH);
@@ -43,20 +45,19 @@ long leftM()//Đo khoảng cách trái
   Distance = soundSpeed * (Duration / 2);//s =v*t
   return(Distance);
 }
-
-long middleM()// Đo khoảng cách phía trước
+long middleM()
 {
-  digitalWrite(trig2, LOW);
+  digitalWrite(trig1, LOW);
   delayMicroseconds(2);
   digitalWrite(trig2, HIGH);
   delayMicroseconds(10);
   digitalWrite(trig2, LOW);
   Duration = pulseIn(echo2, HIGH);
-  Distance = soundSpeed * Duration / 2;
+  Distance = soundSpeed * (Duration / 2);//s =v*t
   return(Distance);
 }
 
-long rightM()// Đo khoảng cách phải
+long rightM()
 {
   digitalWrite(trig3, LOW);
   delayMicroseconds(2);
@@ -64,14 +65,12 @@ long rightM()// Đo khoảng cách phải
   delayMicroseconds(10);
   digitalWrite(trig3, LOW);
   Duration = pulseIn(echo3, HIGH);
-  Distance = soundSpeed * Duration / 2;
+  Distance = soundSpeed * (Duration / 2);//s =v*t
   return(Distance);
 }
 
-
-void Forward()
+void forward()
 {
-  Serial.print("Đang đi Thẳng");
   analogWrite(ENA, leftSpeed);
   analogWrite(ENB, rightSpeed);
   digitalWrite(in1, HIGH);
@@ -80,20 +79,17 @@ void Forward()
   digitalWrite(in4, HIGH);
 }
 
-void turnLeft()
+void back()
 {
-  Serial.print("Rẽ trái!!");
   analogWrite(ENA, leftSpeed);
   analogWrite(ENB, rightSpeed);
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, HIGH);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
 }
-
 void turnRight()
 {
-  Serial.print("Rẽ Phải!!");
   analogWrite(ENA, leftSpeed);
   analogWrite(ENB, rightSpeed);
   digitalWrite(in1, HIGH);
@@ -101,74 +97,69 @@ void turnRight()
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
 }
-
-void BackWard()
+void turnLeft()
 {
-  Serial.print("Chú ý de xe!!");
   analogWrite(ENA, leftSpeed);
   analogWrite(ENB, rightSpeed);
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
-  digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
 }
 
-
-
-void Stop()
+void stop()
 {
-  Serial.print("Phát hiện vật cản!!");
-  analogWrite(ENA, LOW);
-  analogWrite(ENB, LOW);
+  analogWrite(ENA, 0);
+  analogWrite(ENB, 0);
 }
 
 void checkDistance()
 {
   delay(99);
-  int DistanceHT1 = leftM();
+  int leftDHT = leftM();
   delay(10);
-  int DistanceHT2 = middleM();
+  int middleDHT = middleM();
   delay(10);
-  int DistanceHT3 = rightM();
+  int rightDHT = rightM();
   delay(10);
+
   while(true)
   {
-    if(abs(DistanceHT1 - leftDistance) <= minDistance && abs(DistanceHT2 - middleDistance) <= minDistance && abs(DistanceHT3 - rightDistance) <= minDistance)
+    if(abs(leftDistance - leftDHT) <= minDistance && abs(middleDistance - middleDHT) <= minDistance && abs(rightDistance - rightDHT) <= minDistance)
     {
-      if(DistanceHT1 < DistanceHT3)
+      if(leftDHT < rightDHT)
       {
-        Serial.println("Xe không di chuyển!!");
-        Stop();
-        delay(400);
-        BackWard();
-        delay(800);
-        turnRight();
-        delay(30);
-        break; 
+      Serial.println("Lui re phai!!");
+      stop();
+      delay(300);
+      back();
+      delay(800);
+      turnRight();
+      delay(25);
+      break;
       }
-      else if(DistanceHT1 > DistanceHT3)
+      if(leftDHT > rightDHT)
       {
-        Serial.println("Xe không di chuyển!!");
-        Stop();
-        delay(400);
-        BackWard();
-        delay(800);
-        turnLeft();
-        delay(30);
-        break; 
+      Serial.println("Lui re trai!!");
+      stop();
+      delay(300);
+      back();
+      delay(800);
+      turnLeft();
+      delay(25);
+      break;
       }
-      
     }
     else
     {
       break;
     }
   }
-  
 }
 
+
 void loop()
-{  
+{
   leftDistance = leftM();
   delay(10);
   middleDistance = middleM();
@@ -176,89 +167,83 @@ void loop()
   rightDistance = rightM();
   delay(10);
 
-  Serial.print("Khoảng cách trái: ");
+  Serial.print("Khoang cach Trai: ");
   Serial.print(leftDistance);
-  Serial.println("Cm");
-
-  Serial.print("Khoảng cách phía trước: ");
+  Serial.println("CM");
+  Serial.print("Khoang cach Giua: ");
   Serial.print(middleDistance);
-  Serial.println("Cm");
-
-  Serial.print("Khoảng cách Phải: ");
+  Serial.println("CM");
+  Serial.print("Khoang cach Phai: ");
   Serial.print(rightDistance);
-  Serial.println("Cm");
-
+  Serial.println("CM");
+  
 
   if(leftDistance < Wall && middleDistance > Wall && rightDistance > Wall)
   {
+    Serial.println("Xe lech trai!!");
     turnRight();
-    delay(20);
+    delay(28);
   }
   else if(leftDistance > Wall && middleDistance > Wall && rightDistance < Wall)
   {
+    Serial.println("Xe lech phai!!");
     turnLeft();
-    delay(20); 
-  }
-  else if(leftDistance > Wall && middleDistance < Wall && rightDistance > Wall)
-  {
-    if(leftDistance > rightDistance)
-    {
-      turnLeft();
-      delay(500);
-      Stop();
-      delay(200);
-    }
-    if(leftDistance < rightDistance)
-    {
-      turnRight();
-      delay(500);
-      Stop();
-      delay(200);  
-    }
-
+    delay(28);
   }
   else if(leftDistance < Wall && middleDistance < Wall && rightDistance > Wall)
   {
+    Serial.println("Re phai!!");
+    stop();
+    delay(200);
     turnRight();
     delay(500);
-    Stop();
-    delay(200);
   }
   else if(leftDistance > Wall && middleDistance < Wall && rightDistance < Wall)
   {
+    Serial.println("Re trai!!");
+    stop();
+    delay(200);
     turnLeft();
     delay(500);
-    Stop();
-    delay(200);
   }
-
+  else if(leftDistance > Wall && middleDistance < Wall && rightDistance > Wall)
+  {
+    Serial.println("Re trai!!");
+    stop();
+    delay(200);
+    turnLeft();
+    delay(500);
+  }
   else if(leftDistance < Wall && middleDistance > Wall && rightDistance < Wall)
   {
-    if(leftDistance > rightDistance)
-    {
-      turnLeft();
-      delay(50);
-    }
     if(leftDistance < rightDistance)
     {
-      turnRight();
-      delay(50);  
+    Serial.println("Lech Trai!!");
+    turnRight();
+    delay(20);
+    }
+    if(leftDistance > rightDistance)
+    {
+    Serial.println("Lech Phai!!");
+    turnLeft();
+    delay(20);
     }
   }
   else if(leftDistance < Wall && middleDistance < Wall && rightDistance < Wall)
   {
-    Stop();
+    Serial.println("Chu y quay dau!!");
+    stop();
     delay(500);
-    BackWard();
-    delay(1000);
+    back();
+    delay(900);
     turnLeft();
     delay(900);
   }
+
   else
   {
-    Forward();
+    forward();
   }
-  
+
   checkDistance();
-  
 }
