@@ -76,20 +76,20 @@ void forward() {
   Serial.print("Đang đi Thẳng");
   analogWrite(ENA, leftSpeed);
   analogWrite(ENB, rightSpeed);
-  digitalWrite(in1, 1);
-  digitalWrite(in2, 0);
-  digitalWrite(in3, 0);
-  digitalWrite(in4, 1);
+  digitalWrite(in1, 0);
+  digitalWrite(in2, 1);
+  digitalWrite(in3, 1);
+  digitalWrite(in4, 0);
 }
 void turnLeft() 
 {
   Serial.print("Rẽ trái!!");
   analogWrite(ENA, leftSpeed);
   analogWrite(ENB, rightSpeed);
-  digitalWrite(in1, 0);
-  digitalWrite(in2, 1);
-  digitalWrite(in3, 0);
-  digitalWrite(in4, 1);
+  digitalWrite(in1, 1);
+  digitalWrite(in2, 0);
+  digitalWrite(in3, 1);
+  digitalWrite(in4, 0);
 }
 
 void turnRight() 
@@ -97,10 +97,10 @@ void turnRight()
   Serial.print("Rẽ Phải!!");
   analogWrite(ENA, leftSpeed);
   analogWrite(ENB, rightSpeed);
-  digitalWrite(in1, 1);
-  digitalWrite(in2, 0);
-  digitalWrite(in3, 1);
-  digitalWrite(in4, 0);
+  digitalWrite(in1, 0);
+  digitalWrite(in2, 1);
+  digitalWrite(in3, 0);
+  digitalWrite(in4, 1);
 }
 
 
@@ -116,20 +116,20 @@ void lSpeedU()
   Serial.println("Tang Toc Trai$$$");
   analogWrite(ENA, lOutSpeed);
   analogWrite(ENB, rightSpeed);
-  digitalWrite(in1, 1);
-  digitalWrite(in2, 0);
-  digitalWrite(in3, 0);
-  digitalWrite(in4, 1);
+  digitalWrite(in1, 0);
+  digitalWrite(in2, 1);
+  digitalWrite(in3, 1);
+  digitalWrite(in4, 0);
 }
 void rSpeedU()
 {
   Serial.println("Tang Toc Phai$$$&&&&&&&&&&&&&&&&");
   analogWrite(ENA, leftSpeed);
   analogWrite(ENB, rOutSpeed);
-  digitalWrite(in1, 1);
-  digitalWrite(in2, 0);
-  digitalWrite(in3, 0);
-  digitalWrite(in4, 1);
+  digitalWrite(in1, 0);
+  digitalWrite(in2, 1);
+  digitalWrite(in3, 1);
+  digitalWrite(in4, 0);
 }
 
 
