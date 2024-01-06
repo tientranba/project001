@@ -124,7 +124,7 @@ void lSpeedU()
 void rSpeedU()
 {
   Serial.println("Tang Toc Phai$$$&&&&&&&&&&&&&&&&");
-  analogWrite(ENA, leftSpeed - 3);
+  analogWrite(ENA, leftSpeed - 5);
   analogWrite(ENB, rOutSpeed);
   digitalWrite(in1, 0);
   digitalWrite(in2, 1);
