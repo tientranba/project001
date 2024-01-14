@@ -37,7 +37,8 @@ void setup()
 
   Serial.println("Start!!!");
   stop();
-  delay(5000);
+  delay(3000);
+  forward(), delay(100);
 
 
 }
