@@ -4,16 +4,16 @@ int trig3 = A4, echo3 = A5;  // cảm biến phải
 
 int ENA = 11, ENB = 3;  // chân điều khiển tốc độ
 int in1 = 10, in2 = 9, in3 = 8, in4 = 7;  // chân điều khiển hướng đi
-int wheelSpeed = 90, leftSpeed = 0, rightSpeed = 0; // tốc độ bánh xe**
+int wheelSpeed = 125, leftSpeed = 0, rightSpeed = 0; // tốc độ bánh xe**
 long Duration, Distance; // thời gian, khoảng cách phản lại
 long leftDistance = 0, middleDistance = 0, rightDistance = 0;
 const float soundSpeed = 0.0343;  //tôc độ âm thanh 343 m/s = 0.0343 cm/um
 const double wall = 14;//Khoảng cách vật chắn**
-const float kp = 1.9;
-const float ki = 0.001;
-const float kd = 0.9;
+const float kp = 2;
+const float ki = 0.004;
+const float kd = 0.6;
 
-double sumError = 0;
+float sumError = 0;
 float prevError = 0;
 
 float pid = 0;
@@ -77,6 +77,7 @@ long middleMeasurement()  // Đo khoảng cách phía trước
   }
 }
 
+
 void forward() {
   Serial.print("Đang đi Thẳng");
   analogWrite(ENA, leftSpeed);
@@ -102,7 +103,7 @@ void turnRight()
 {
   Serial.print("Turn Right!!!");
   analogWrite(ENA, wheelSpeed);
-  analogWrite(ENB, 0);
+  analogWrite(ENB, wheelSpeed);
   digitalWrite(in1, 0);
   digitalWrite(in2, 1);
   digitalWrite(in3, 0);
@@ -117,13 +118,13 @@ void stop() {
 void wallFollow()
 {  
 
-  double error = wall - leftDistance;
-  double proportional = kp * error;
+  float error = wall - leftDistance;
+  float proportional = kp * error;
   sumError += error;
 
-  double integral = ki * sumError; 
+  float integral = ki * sumError; 
 
-  double derivative = kd * (error - prevError);
+  float derivative = kd * (error - prevError);
 
   pid = proportional + integral + integral;
 
@@ -150,6 +151,7 @@ void loop()
 
   int left_status = leftMeasurement();
   int middle_status = middleMeasurement();
+  
 
   Serial.print("Khoảng cách trái: ");
   Serial.print(leftDistance);
