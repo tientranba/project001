@@ -8,10 +8,10 @@ int wheelSpeed = 125, leftSpeed = 0, rightSpeed = 0; // tốc độ bánh xe**
 long Duration, Distance; // thời gian, khoảng cách phản lại
 long leftDistance = 0, middleDistance = 0, rightDistance = 0;
 const float soundSpeed = 0.0343;  //tôc độ âm thanh 343 m/s = 0.0343 cm/um
-const double wall = 14;//Khoảng cách vật chắn**
-const float kp = 2;
-const float ki = 0.004;
-const float kd = 0.6;
+const double wall = 15;//Khoảng cách vật chắn**
+const float kp = 2.1;
+const float ki = 0.005;
+const float kd = 0.08;
 
 float sumError = 0;
 float prevError = 0;
@@ -38,7 +38,7 @@ void setup()
   Serial.println("Start!!!");
   stop();
   delay(3000);
-  forward(), delay(100);
+  forward(), delay(50);
 
 
 }
@@ -121,13 +121,13 @@ void wallFollow()
 
   float error = wall - leftDistance;
   float proportional = kp * error;
-  sumError += error;
 
+  sumError += error;
   float integral = ki * sumError; 
 
   float derivative = kd * (error - prevError);
 
-  pid = proportional + integral + integral;
+  pid = proportional + integral + derivative;
 
   leftSpeed  = wheelSpeed + pid;
   rightSpeed  = wheelSpeed - pid;
