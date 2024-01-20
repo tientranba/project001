@@ -9,9 +9,9 @@ long Duration, Distance; // thời gian, khoảng cách phản lại
 long leftDistance = 0, middleDistance = 0, rightDistance = 0;
 const float soundSpeed = 0.0343;  //tôc độ âm thanh 343 m/s = 0.0343 cm/um
 const double wall = 15;//Khoảng cách vật chắn**
-const float kp = 1.9;
-const float ki = 0.006;
-const float kd = 1.2;
+const float kp = 1.79;
+const float ki = 0.0063;
+const float kd = 1.25;
 
 float sumError = 0;
 float prevError = 0;
