@@ -9,15 +9,15 @@ long Duration, Distance; // thời gian, khoảng cách phản lại
 long leftDistance = 0, middleDistance = 0, rightDistance = 0;
 const float soundSpeed = 0.0343;  //tôc độ âm thanh 343 m/s = 0.0343 cm/um
 const double wall = 19;//Khoảng cách vật chắn**
-const float kp = 1.12;
-const float ki = 0.00033;
-const float kd = 0.82;
+const float kp = 2.6;
+const float ki = 0;
+const float kd = 1.2;
+int T = 80; 
 
 float sumError = 0;
 float prevError = 0;
 
 float pid = 0;
-int T = 98; 
 unsigned long lastTime = 0;
 
 void setup()
@@ -47,9 +47,8 @@ void setup()
   digitalWrite(13, 0), delay(500);
   digitalWrite(13, 1), delay(500);
   digitalWrite(13, 0);
-
-
-
+  
+  forward(), delay(200);
 }
 
 long leftMeasurement()  //Đo khoảng cách trái
@@ -137,29 +136,30 @@ void wallFollow()
 {  
   unsigned long currentTime = millis();
   int deltaTime  = currentTime - lastTime;
-  
-  float error = wall - leftDistance;
-  sumError += error;
-  float proportional = kp * error;
+  if (deltaTime >= T)
+  {
+    float error = wall - leftDistance;
+    sumError += error;
+    float proportional = kp * error;
 
-  float integral = (ki * T) * sumError; 
+    float integral = (ki * T) * sumError; 
 
-  float derivative = kd * ((error - prevError) / T);
+    float derivative = kd * ((error - prevError) / T);
 
-  pid = proportional + integral + derivative;
-  leftSpeed  = wheelSpeed + pid;
-  rightSpeed  = wheelSpeed - pid;
+    pid = proportional + integral + derivative;
+    leftSpeed  = wheelSpeed + pid;
+    rightSpeed  = wheelSpeed - pid;
 
-  analogWrite(ENA, leftSpeed);
-  analogWrite(ENB, rightSpeed);
-  digitalWrite(in1, 0);
-  digitalWrite(in2, 1);
-  digitalWrite(in3, 1);
-  digitalWrite(in4, 0);
+    analogWrite(ENA, leftSpeed);
+    analogWrite(ENB, rightSpeed);
+    digitalWrite(in1, 0);
+    digitalWrite(in2, 1);
+    digitalWrite(in3, 1);
+    digitalWrite(in4, 0);
 
-  prevError = error;
-  lastTime = currentTime;
-
+    prevError = error;
+    lastTime = currentTime;
+  }
 }
 
 
@@ -168,8 +168,9 @@ void loop()
 {
 
   int left_status = leftMeasurement();
+  delay(10);
   int middle_status = middleMeasurement();
-  
+  delay(10);
 
   Serial.print("Khoảng cách trái: ");
   Serial.print(leftDistance);
