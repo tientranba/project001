@@ -4,11 +4,11 @@ int trig3 = A4, echo3 = A5;  // cảm biến phải
 
 int ENA = 11, ENB = 3;  // chân điều khiển tốc độ
 int in1 = 10, in2 = 9, in3 = 8, in4 = 7;  // chân điều khiển hướng đi
-int wheelSpeed = 125, leftSpeed = 0, rightSpeed = 0; // tốc độ bánh xe**
+int wheelSpeed = 109, leftSpeed = 0, rightSpeed = 0; // tốc độ bánh xe**
 long Duration, Distance; // thời gian, khoảng cách phản lại
 long leftDistance = 0, middleDistance = 0, rightDistance = 0;
 const float soundSpeed = 0.0343;  //tôc độ âm thanh 343 m/s = 0.0343 cm/um
-const double wall = 15;//Khoảng cách vật chắn**
+const double wall = 14;//Khoảng cách vật chắn**
 const float kp = 1.79;
 const float ki = 0.0063;
 const float kd = 1.25;
@@ -38,8 +38,6 @@ void setup()
   Serial.println("Start!!!");
   stop();
   delay(3000);
-  forward(), delay(50);
-
 
 }
 
@@ -70,7 +68,7 @@ long middleMeasurement()  // Đo khoảng cách phía trước
   digitalWrite(trig2, LOW);
   Duration = pulseIn(echo2, HIGH);
   middleDistance = soundSpeed * Duration / 2;
-  if (middleDistance < wall) {
+  if (middleDistance < 11) {
     return 1;
   }
   else {
@@ -81,8 +79,8 @@ long middleMeasurement()  // Đo khoảng cách phía trước
 
 void forward() {
   Serial.print("Đang đi Thẳng");
-  analogWrite(ENA, leftSpeed);
-  analogWrite(ENB, rightSpeed);
+  analogWrite(ENA, 100);
+  analogWrite(ENB, 100);
   digitalWrite(in1, 0);
   digitalWrite(in2, 1);
   digitalWrite(in3, 1);
@@ -91,7 +89,7 @@ void forward() {
 
 void turnLeft() 
 {
-  Serial.print("Turn Left!!!");
+  Serial.print("Re Trai!!!");
   analogWrite(ENA, 0);
   analogWrite(ENB, wheelSpeed);
   digitalWrite(in1, 1);
@@ -102,7 +100,7 @@ void turnLeft()
 
 void turnRight() 
 {
-  Serial.print("Turn Right!!!");
+  Serial.print("Re phai!!!");
   analogWrite(ENA, wheelSpeed);
   analogWrite(ENB, wheelSpeed);
   digitalWrite(in1, 0);
@@ -142,16 +140,13 @@ void wallFollow()
   prevError = error;
 }
 
-  
-
-
-
-
 void loop() 
 {
 
   int left_status = leftMeasurement();
+  delay(10);
   int middle_status = middleMeasurement();
+  delay(10);
   
 
   Serial.print("Khoảng cách trái: ");
